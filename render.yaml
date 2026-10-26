@@ -1,0 +1,38 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+#
+# One Node web service serves both the Express API ( /api/* ) and the
+# compiled React frontend (everything else).
+#
+# Required manual step: create a free MongoDB Atlas cluster and paste its
+# connection string into MONGODB_URI when Render prompts for it.
+
+services:
+  - type: web
+    name: stockpilot
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    autoDeploy: true
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.1
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: ADMIN_NAME
+        value: Store Administrator
+      - key: ADMIN_EMAIL
+        value: admin@stockpilot.dev
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: SEED_DEMO_DATA
+        value: "true"

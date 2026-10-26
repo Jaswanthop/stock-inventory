@@ -1,0 +1,20 @@
+# Local MongoDB for development.
+# Start with: docker compose up -d
+# Then use MONGODB_URI=mongodb://127.0.0.1:27017/stockpilot in your .env
+services:
+  mongo:
+    image: mongo:7
+    container_name: stockpilot-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - stockpilot-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  stockpilot-mongo-data:
